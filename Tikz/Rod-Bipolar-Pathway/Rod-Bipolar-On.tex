@@ -1,0 +1,66 @@
+\documentclass[tikz, 11pt]{standalone}
+
+\input{Rod-Bipolar-Settings}
+
+\begin{document}
+\begin{tikzpicture}[x=\unit, y=\unit]
+
+% --- Cones and rods ---
+\pic[local bounding box=c] at (0, 0) {cone};
+\node[conePathwaySynapseWide, yshift=-1*\unit] (cs) at (c.south) {};
+\draw[coneEdge] (cs) -- (c);
+\foreach \x in {1,...,\nRods}{
+	\pic[local bounding box=r] at (\x*2+0.5, 0) {rod};
+	\node[rodPathwaySynapseWide, yshift=-0.75*\unit] (rs\x) at (r.south) {};
+	\draw[rodEdge] (rs\x) -- (r);
+}
+
+% cone to rod gap junctions
+\draw[snakeEdge, draw=conePathwayColor] (cs) -- (rs1);
+
+% --- Cone bipolar cells ---
+\node[conePathwaySynapse, anchor=north, yshift=-\synDist] (cbTop) at (cs.south) {};
+\node[conePathwayBipolar, yshift=-\bpShift] (cb) at (cbTop.south) {};
+\node[rodPathwaySynapse, anchor=north, yshift=-\bpShift] (cbBottom) at (cb.center) {};
+\draw[coneEdge] (cb) -- (cbTop);
+\draw[coneEdge] (cb) -- (cbBottom);
+
+% --- Rod bipolar cell ---
+\node[rodPathwayBipolar, yshift=-\bpShift, xshift=(\nRods+3.5)*\unit] (rb) at (cbTop.south) {};
+\node[rodPathwaySynapse, anchor=north, yshift=-\bpShift] (rbBottom) at (rb.center) {};
+\draw[rodEdge] (rb.south) -- (rbBottom.north);
+\foreach \x in {1,...,\nRods}{
+	\node[rodPathwaySynapse, anchor=north, yshift=-\synDist] (rbTop\x) at (rs\x.south) {};
+	\draw[rodEdge] (rb.north) --++ (0, 0.5*\unit) -- (rbTop\x);
+}
+
+% --- Amacrine cells ---
+% ON 
+\node[amacrine, yshift=-\amaShift, xshift=(-1*\nRods)*\unit] (a) at (rb.south) {};
+\node[rodPathwaySynapse, anchor=east, xshift=-\synDist] (aRight) at (rbBottom.west) {};
+\draw[rodEdge] (a.east) -- (aRight);
+\draw[snakeEdge, draw=rodPathwayColor] (a.west) -- (a-|cb);
+\draw[rodEdge] (cbBottom.north) -- (a.east-|cb);
+
+% --- RGCs ---
+% ON
+\node[synapse, draw=onColor, fill=onColor, anchor=north, yshift=-\synDist] (onTop) at (cbBottom.south) {};
+\coordinate[yshift=-\rgcShift] (rgc) at (onTop.south);
+\coordinate[] (pHor) at (-2.5*\unit, 0);
+
+% Pipett
+\node[pipettEdge, ellipse, minimum width=2*\unit, minimum height=1*\unit, inner sep=0, rotate=45] (pipett) at (pHor|-cb.south) {};
+\draw[pipettEdge] (pipett.center) --++ (-2*\unit, 0) --++ (0, 1*\unit) --++ (-1.5*\unit, -1*\unit) --++ 
+	(-1*\unit, 0) --++ (1*\unit, 0) --++ (1.5*\unit, -1*\unit) --++ (0, 1*\unit);
+\draw[pipettEdge] (pipett.center) -- ($(pipett.center)!0.5!(rgc.center)$);
+\draw[pipettEdge] (pipett.west) -- (rgc.center);
+\draw[pipettEdge] (pipett.east) -- (rgc.center);
+
+% Soma
+\node[rgc, draw=none, fill=white] (on) at (rgc) {};
+\node[rgc, draw=onColor, fill=onColor!\fillSat!white] (on) at (rgc) {};
+\draw[edge, draw=onColor] (onTop.south) -- (on.north);
+\node[textNode, anchor=west, color=onColor] at (on.east) {\textSize On};
+
+\end{tikzpicture}
+\end{document}

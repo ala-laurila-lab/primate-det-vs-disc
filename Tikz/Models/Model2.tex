@@ -1,0 +1,31 @@
+\documentclass[tikz, 11pt]{standalone}
+
+% Parameters
+\input{../FigureFontsAndColors}
+\input{../Retinal-Processing/ModelSettings}
+\input{ModelSettings}
+
+% Parameters
+\newcommand{\nSubUnits}{6}
+
+\begin{document}
+\begin{tikzpicture}[x=\unit, y=\unit]
+
+% Frame
+\input{ModelFrame}
+
+% Name
+\node[textNodeThight, anchor=south, text width=2.5cm, align=left, xshift=1.75*\objSize*\unit] at (retinaBox.north) {\baselineskip=6pt {\textSize Model 2 (M2)} \\{\tinySize Retinal~\&~brain~nonlin.\par}};
+%\node[textNodeThight, anchor=south] at (retinaBox.north) {\textSize Model \textrm{II}};
+
+% Brain nonlinearity
+\node[box, fill=none, minimum width=\objSize*\unit+2*\pad*\unit, minimum height=\height*\unit, anchor=west, xshift=2*\xSep*\unit - 1*\pad*\unit] (brainBox) at (largeSum.east) {};
+\node[funObj, fill=modelFillColor] (nonLinB) at (brainBox) {};
+\pic[] at (nonLinB) {nonLinFun};
+\draw[edgeShort] (largeSum.east) -- (nonLinB.west);
+\draw[edgeShort] (nonLinB.east) --++ (\xSep, 0);
+
+
+
+\end{tikzpicture}
+\end{document}

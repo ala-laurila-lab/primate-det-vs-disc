@@ -1,0 +1,58 @@
+\documentclass[tikz, 11pt]{standalone}
+
+\input{FigureSettings.tex}
+\input{FigureFontsAndColors}
+
+% Parameters
+\newcommand{\xs}{1.2cm}
+\newcommand{\rw}{1.4cm}
+\newcommand{\dx}{1.2mm}
+\newcommand{\dy}{1.2mm}
+
+\begin{document}
+\begin{tikzpicture}[]
+
+\node[panel, anchor=north west] (a) at (0cm, 0cm) {\includegraphics[]{"../Figure Panels/Fig2_OFFRasters"}};
+\node[panel, anchor=north west, xshift=0mm, yshift=-1mm] (aLeft) at (a.north west) {\includegraphics[]{"Rod-Bipolar-Pathway/Rod-Bipolar-Off"}};
+\node[panel, anchor=north west, xshift=6mm, yshift=6mm] (aMonkey) at (a.north west) {\includegraphics[]{"Icons/MonkeyIcon"}};
+\node[panel, anchor=north west] (b) at (a.north east) {\includegraphics[]{"../Figure Panels/Fig2_ONRasters"}};
+\node[panel, anchor=north west, xshift=0mm, yshift=-1mm] (bLeft) at (b.north west) {\includegraphics[]{"Rod-Bipolar-Pathway/Rod-Bipolar-On"}};
+\node[panel, anchor=north west, xshift=6mm, yshift=6mm] (bMonkey) at (b.north west) {\includegraphics[]{"Icons/MonkeyIcon"}};
+
+\foreach \xShift in  {0cm, 6cm}{
+	% Discrimination
+	\draw[linesShort, draw=discColor] (\xs+0.5*\rw+\xShift, -1.9cm) --++ (0.5*\rw, 0cm) ; 
+	\draw[linesShort, draw=discColor] (\xs+1.5*\rw+1*\dx+\xShift, -1.9cm) --++ (0.5*\rw, 0cm) ; 
+	\draw[linesShort, draw=discColor] (\xs+2.5*\rw+2*\dx+\xShift, -1.9cm) --++ (0.5*\rw, 0cm) ;
+	\draw[lines, draw=discColor] (\xs+\xShift+0.75*\rw+\dx, -1.9cm) --++ (0, -\dy) --++ (\rw, 0) --++ (0, \dy);
+	\draw[lines, draw=discColor] (\xs+\xShift+0.75*\rw-\dx, -1.9cm) --++ (0, -2*\dy)  --++ (2*\rw+3*\dx, 0) --++ (0, 2*\dy);
+	% Detection
+	\foreach \i in {0, 1, 2}{
+		\draw[linesShort, draw=detColor] (\xs+0.5*\rw+\i*\rw+\i*\dx+\xShift, 0cm) --++ (0.5*\rw, 0cm) ;
+		\draw[linesShort, draw=detColor] (\xs+\i*\rw+\i*\dx+\xShift, 0cm) --++ (0.5*\rw, 0cm) ; 
+		\draw[lines, draw=detColor] (\xs+0.25*\rw+\i*\rw+\i*\dx+\xShift, 0cm) --++ (0, \dy) --++ (0.5*\rw, 0) --++ (0, -\dy); 
+	}
+	% Text
+	\node[inner sep=1mm, anchor=south] at (\xs+1.5*\rw+\dx+\xShift, \dy) {\textSize \color{detColor} Detection};
+	\node[inner sep=1mm, anchor=north] at (\xs+1.5*\rw+\dx+\xShift, -1.9cm-2*\dy) {\textSize \color{discColor} Discrimination};
+}
+
+\node[panel, anchor=north west, yshift=-4mm] (c) at (a.south west) {\includegraphics[]{"../Figure Panels/Fig2_OFF2AFC"}};
+\node[panel, anchor=north west] (d) at (c.north east) {\includegraphics[]{"../Figure Panels/Fig2_ON2AFC"}};
+\node[panel, anchor=north west, yshift=2mm] (e) at (c.south west) {\includegraphics[]{"../Figure Panels/Fig2_OFFDippers"}};
+\node[panel, anchor=north west] (f) at (e.north east) {\includegraphics[]{"../Figure Panels/Fig2_ONDippers"}};
+
+% Labels
+\node[label, yshift=6mm] at (a.north west) {\labelSize a};
+\node[label, yshift=6mm] at (b.north west) {\labelSize b};
+\node[label] at (c.north west) {\labelSize c};
+\node[label] at (d.north west) {\labelSize d};
+\node[label] at (e.north west) {\labelSize e};
+\node[label] at (f.north west) {\labelSize f};
+
+%Headings
+\draw[draw=black, line width=1pt, shorten > =3mm, shorten < =3mm] (0, 7mm) --++ (6cm, 0) node[midway, headingNode] {\headingSize OFF RGCs};
+\draw[draw=black, line width=1pt, shorten > =3mm, shorten < =3mm] (6cm, 7mm) --++ (6cm, 0) node[midway, headingNode] {\headingSize ON RGCs};
+
+\end{tikzpicture}
+\end{document}

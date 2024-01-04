@@ -1,0 +1,12 @@
+*~
+*.pdf
+*.png
+*.jpg
+*.mat
+*.DS_Store
+*.aux
+*.gz
+*.log
+*.zip
+*.idea
+*.xlsx

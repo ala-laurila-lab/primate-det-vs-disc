@@ -1,0 +1,41 @@
+
+\draw[white] (-3mm, 0mm) --++ (60mm, 0);
+
+% Retina box
+\node[box, draw=none, fill=none, minimum width=\retinaWidth*\unit, minimum height=\retinaHeight*\unit, anchor=west] (retina) at (5, 0) {};
+% Retina texts
+\node[textNodeThight, anchor=south] at (retina.north) {\textSize Retina};
+
+% Brain box
+\node[box, draw=none, fill=none , minimum width=\brainWidth*\unit, minimum height=\retinaHeight*\unit, anchor=west, xshift=2*\xSepOn*\unit+2.5*\objSize*\unit + \lineWidth +\pad*\unit] (brain) at (retina.east) {};
+% Brain processing symbols
+\newcommand{\tmpWidth}{5}
+\node[obj, outer sep=0, fill=boxColor, minimum width=\brainWidth*\unit, minimum height=2*\pathwayHeight*\unit + 2*\yShiftPathway*\unit] (brainProcessing) at (brain) {};
+%\fill[offColor!\fillSat!white] ($(brainProcessing.south west)+(0, \yShiftBrain)$) -- (brainProcessing.north west) -- (brainProcessing.north east) --++ (0, -\yShiftBrain) -- cycle;
+%\fill[onColor!\fillSat!white] ($(brainProcessing.north east)+(0, -\yShiftBrain)$)  -- (brainProcessing.south east) -- (brainProcessing.south west) --++ (0, \yShiftBrain) -- cycle;
+%\node[funObj, fill=onColor!\fillSat!white, anchor=south, xshift=-0*\unit, yshift=2*\unit] (brainNonlinear) at (brainProcessing.south) {};
+%\node[funObj, fill=offColor!\fillSat!white, anchor=north, xshift=0*\unit, yshift=-2*\unit] (brainLinear) at (brainProcessing.north) {};
+\node[funObj, fill=onColor!\fillSat!white, xshift=-0*\unit, yshift=-\yShiftPathway*\unit-0.5*\pathwayHeight*\unit] (brainNonlinear) at (brainProcessing) {};
+\node[funObj, fill=offColor!\fillSat!white, xshift=0*\unit, yshift=\yShiftPathway*\unit+0.5*\pathwayHeight*\unit] (brainLinear) at (brainProcessing) {};
+\draw[edgeShort] (brainLinear.west) --++ (-\xSepOn, 0);
+\draw[edgeShort] (brainLinear.east) --++ (1.*\xSepOn, 0);
+\draw[edgeShort] (brainNonlinear.west) --++ (-1.*\xSepOn, 0);
+\draw[edgeShort] (brainNonlinear.east) --++ (\xSepOn, 0);
+\pic[] at (brainNonlinear) {nonLinFun};
+\pic[] at (brainLinear) {linFun};
+\node[textNodeLabel, minimum width=\brainWidth*\unit, fill=onColor!\fillSat!white, anchor=north east] at (brainProcessing.south east) (nonlinLabelB) {\tinySize Nonlin.};
+\node[textNodeLabel, minimum width=\brainWidth*\unit, fill=offColor!\fillSat!white, anchor=south west] at (brainProcessing.north west) (linLabelB) {\tinySize Linear};
+\node[inner sep=0] (q) at (brain) {\textSize?};
+%\draw[edge, shorten >=0.25*\unit] ($(brainProcessing.north east)+(0, -\yShiftBrain)$)  --  (q);
+%\draw[edge, shorten <=0.25mm] (q) -- ($(brainProcessing.south west)+(0, \yShiftBrain)$);
+% Brain texts
+\node[textNodeThight, anchor=south] at (brain.north) {\textSize Brain};
+% Outlines
+%\draw[edge, onColor, shorten <=1.5*\unit, shorten >=1.5*\unit] ($(q)+(0, -1*\lineWidth)$) -- ($(brainProcessing.south west)+(0, \yShiftBrain)+(0, -1*\lineWidth)$) -- (brainProcessing.south west) -- (nonlinLabelB.north west) -- (nonlinLabelB.south west) -- (nonlinLabelB.south east) -- ($(brainProcessing.north east)+(0, -\yShiftBrain)+(0, -1*\lineWidth)$) -- ($(q)+(0, -1*\lineWidth)$);
+%\draw[edge, offColor, shorten <=1.5*\unit, shorten >=1.5*\unit] ($(q)+(0, 1*\lineWidth)$) -- ($(brainProcessing.north east)+(0, -\yShiftBrain)+(0, 1*\lineWidth)$)  -- (brainProcessing.north east) -- (linLabelB.south east) -- (linLabelB.north east) -- (linLabelB.north west) -- ($(brainProcessing.south west)+(0, \yShiftBrain)+(0, 1*\lineWidth)$) -- ($(q)+(0, 1*\lineWidth)$) ;
+\draw[edge, onColor, shorten <=1.5*\unit, shorten >=1.5*\unit] ($(q)+(0, -1*\lineWidth)$) -- ($(brainProcessing.west)+(0, -\yShiftBrain)+(0, -1*\lineWidth)$) -- (nonlinLabelB.south west) -- (nonlinLabelB.south east) -- ($(brainProcessing.east)+(0, -\yShiftBrain)+(0, -1*\lineWidth)$) -- ($(q)+(0, -1*\lineWidth)$);
+\draw[edge, offColor, shorten <=1.5*\unit, shorten >=1.5*\unit] ($(q)+(0, 1*\lineWidth)$) -- ($(brainProcessing.east)+(0, \yShiftBrain)+(0, 1*\lineWidth)$)  -- (linLabelB.north east) -- (linLabelB.north west) -- ($(brainProcessing.west)+(0, \yShiftBrain)+(0, 1*\lineWidth)$) -- ($(q)+(0, 1*\lineWidth)$) ;
+
+% Labels
+\node[textNodeThight, anchor=north, xshift=2.25*\xSepOn*\unit, rotate=90] (behavior) at (brain.east) {\tinySize \color{black}  \textbf{Behavioral output}};
+\draw[edgeShort, -\arrow]  (brain.east) -- (behavior.north);

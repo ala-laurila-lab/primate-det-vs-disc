@@ -1,0 +1,26 @@
+\documentclass[tikz, 11pt]{standalone}
+
+\usetikzlibrary{shapes.geometric, snakes}
+
+
+
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault} 
+
+\newcommand{\textSize}{\scriptsize}		% scriptsize corresponds to 8 pt
+\newcommand{\headingSize}{\small}		% 
+\newcommand{\labelSize}{\large}			% Large corresponds to 12 pt
+
+
+\tikzstyle{panel}=[draw=none, inner sep=0]
+
+\begin{document}
+\begin{tikzpicture}[]
+
+\node[panel, anchor=north west] (a) at (0,0) {\includegraphics{"../Supplement figures/SupplementDetectionDiscrimination"}};
+\node[panel, anchor=north west, xshift=1.5mm, yshift=2mm] (on) at (a.north west) {\includegraphics[scale=1]{"Rod-Bipolar-Pathway/Rod-Bipolar-On"}};
+\node[panel, anchor=north west, xshift=1.5mm, yshift=25.5mm] (off) at (a.west) {\includegraphics[scale=1]{"Rod-Bipolar-Pathway/Rod-Bipolar-Off"}};
+\node[panel, anchor=north west, xshift=4mm, yshift=-20mm] (psycho) at (a.west) {\includegraphics[height=1cm]{"Icons/HumanIcon"}};
+
+\end{tikzpicture}
+\end{document}

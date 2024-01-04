@@ -1,0 +1,51 @@
+\usetikzlibrary{shapes.geometric, arrows.meta, snakes, calc, decorations.pathmorphing}
+
+% Parameters
+\newcommand{\unit}{1mm}
+\newcommand{\pad}{0.5}
+\newcommand{\objSize}{2.75}
+\newcommand{\ySep}{0.3*\objSize}
+\newcommand{\yShiftPathway}{1}
+\newcommand{\yShiftBrain}{3}
+\newcommand{\retinaWidth}{22}
+\newcommand{\retinaHeight}{27}
+\newcommand{\pathwayHeight}{9}
+\newcommand{\sumHeight}{ (2*\objSize+2*\ySep) }
+\newcommand{\brainWidth}{8}
+\newcommand{\lineWidth}{0.5pt}
+\newcommand{\cornerRadius}{0.2*\unit}
+\newcommand{\arrow}{{Latex[length=\unit, width=\unit]}}
+\pgfmathsetmacro{\xSepOff}{ (\retinaWidth-5*\objSize)/3 }%
+\pgfmathsetmacro{\xSepOn}{ (\retinaWidth-5.5*\objSize)/4 }%
+
+
+\colorlet{boxColor}{gray!20!white}
+%\colorlet{boxColor}{white}
+
+% Packages
+\usepackage{amsmath,amssymb}
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault} 
+
+% Styles
+\tikzstyle{edge}=[draw=black, line width=\lineWidth, line cap=round, rounded corners=\cornerRadius]
+\tikzstyle{edgeShort}=[edge, shorten < = 0.35*\unit, shorten > = 0.35*\unit]
+\tikzstyle{edgeThick}=[edge, line width=2*\lineWidth]
+\tikzstyle{photon}=[black, line width=\lineWidth, -\arrow, decorate, decoration={snake, segment length=1.25*\unit, amplitude=0.4*\unit, post length=1*\unit}]
+\tikzstyle{textNode}=[inner sep=1mm, align=center, rounded corners=\cornerRadius, line width=1*\lineWidth]
+\tikzstyle{textNodeThight}=[textNode, inner sep=0.5mm, outer sep=0]
+\tikzstyle{textNodeLabel}=[textNodeThight,  text height=5pt, text depth=1pt]
+\tikzstyle{box}=[rounded corners=\cornerRadius, line width=1*\lineWidth, outer sep=0]
+\tikzstyle{obj}=[inner sep=0, draw=none, minimum width=\objSize*\unit, minimum height=\objSize*\unit, rounded corners=\cornerRadius, line width=1*\lineWidth]
+%\tikzstyle{sumObj}=[obj, draw=black, regular polygon, regular polygon sides=3, shape border rotate=-90]
+\tikzstyle{sumObj}=[obj, draw=none, minimum width=0.5*\objSize*\unit]
+\tikzstyle{funObj}=[obj, draw=black, line width=1*\lineWidth]
+
+% Prototypes
+\tikzset{nonLinFun/.pic = {\draw[edgeThick] (-0.4*\objSize*\unit, -0.25*\objSize*\unit) --++ (0.4*\objSize*\unit, 0) --++ (0.4*\objSize*\unit, 0.5*\objSize*\unit);}}
+\tikzset{linFun/.pic = {\draw[edgeThick] (-0.4*\objSize*\unit, -0.4*\objSize*\unit)  --++ (0.8*\objSize*\unit, 0.8*\objSize*\unit);}}
+\tikzset{
+	rod/.pic = {
+		\node[rectangle, draw=none, fill=black, minimum width=0.8*\objSize*\unit, minimum height=0.1*\objSize*\unit,  anchor=west, rounded corners=\cornerRadius, inner sep=0, outer sep=0]  at (-0.5*\objSize, 0) {};
+		\node[ellipse, draw=none, fill=black, minimum width=0.3*\objSize*\unit, minimum height=0.2*\objSize*\unit,  anchor=east, inner sep=0, outer sep=0]  at (0.5*\objSize, 0) {};}
+}

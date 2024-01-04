@@ -1,0 +1,24 @@
+\documentclass[tikz, 11pt]{standalone}
+
+% Parameters
+\input{../FigureFontsAndColors}
+\input{../Retinal-Processing/ModelSettings}
+\input{ModelSettings}
+
+% Parameters
+\newcommand{\nSubUnits}{3}
+
+\begin{document}
+\begin{tikzpicture}[x=\unit, y=\unit]
+
+%Frame
+\input{ModelFrame}
+
+% Name
+\node[textNodeThight, anchor=south, text width=2cm, align=left, xshift=0.85*\objSize*\unit] at (retinaBox.north) { \baselineskip=6pt {\textSize Model 1 (M1)} \\{\tinySize Retinal nonlin.\par}};
+%\node[textNodeThight, anchor=south] at (retinaBox.north) {\textSize Model \textrm{I}};
+
+\draw[edgeShort] (largeSum.east) --++ (\xSep, 0);
+
+\end{tikzpicture}
+\end{document}

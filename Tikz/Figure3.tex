@@ -1,0 +1,46 @@
+\documentclass[tikz, 11pt]{standalone}
+
+% Parameters and settings
+\input{FigureSettings.tex}
+\input{FigureFontsAndColors}
+\renewcommand{\textSize}{\scriptsize \baselineskip=8pt}
+
+\begin{document}
+\begin{tikzpicture}[]
+
+% Panels
+\coordinate[] (topleft) at (0, 0);
+\node[panel, anchor=north west, xshift=1mm] (a) at (0cm, 0cm) {\includegraphics[trim=37mm 205mm 54mm 65mm, clip]{Fig3a}};
+\node[panel, anchor=north west] (b) at (a.south -| topleft) {\includegraphics{"../Figure Panels/Fig3_Psycho2AFC"}};
+\node[panel, anchor=north west] (c) at (b.north east) {\includegraphics{"../Figure Panels/Fig3_PsychoDippers"}};
+\node[panel, anchor=north west, yshift=-17mm] (d) at (b.south west) {\includegraphics{"../Figure Panels/Fig3_PsychoRGCDipper"}};
+\node[panel, anchor=north east, yshift=-17mm] (e) at (c.south east) {\includegraphics{"../Figure Panels/Fig3_PsychoRGCDipperModel"}};
+
+\newcommand{\dy}{3mm}
+% Data icons
+\node[panel, anchor=south west, xshift=14mm, yshift=-\dy-0mm] (off) at (d.north west) {\includegraphics{"Rod-Bipolar-Pathway/Rod-Bipolar-Off"}};
+\node[panel, anchor=south west, xshift=29mm, yshift=-\dy-0mm] (on) at (d.north west) {\includegraphics{"Rod-Bipolar-Pathway/Rod-Bipolar-On"}};
+\node[panel, anchor=north, xshift=3.5mm, yshift=-0mm] (psycho) at (off.north east) {\includegraphics[]{"Icons/MonkeyIcon"}};
+%\node[panel, anchor=north east, xshift=-6mm, yshift=0mm] (psycho) at (d.north east |- on.north) {\includegraphics[]{"Icons/PsychoPhysicsIcon"}};
+\node[panel, anchor=north east, xshift=-7mm, yshift=0mm] (psycho) at (d.north east |- on.north) {\includegraphics[height=0.8cm]{"Icons/HumanIcon"}};
+\node[panel, anchor=south, inner sep=0.5mm, text height=7pt, text depth=1pt] (psychoText2) at (psycho |- on.south) {\textSize \color{psychoColor} physics};
+\node[panel, anchor=south, inner sep=0.5mm, text height=7pt, text depth=1pt, yshift=-1mm] (psychoText1) at (psychoText2.north) {\textSize \color{psychoColor} Psycho-};
+
+% Model icons
+\node[panel, anchor=west, xshift=14mm, yshift=1] (m1) at (e.north west |- on) {\includegraphics{"Models/Model1"}};
+\node[panel, anchor=east, xshift=-1mm, yshift=1] (m3) at (e.north east |- on) {\includegraphics{"Models/Model2"}};
+
+% Headings
+\draw[draw=black, line width=1pt, shorten > =3mm, shorten < =3mm] (0,3mm) -- (12cm, 3mm) node [midway, headingNode] {\headingSize Human psychophysics};
+\draw[draw=black, line width=1pt, shorten > =3mm, shorten < =3mm] (b.south west) --++ (6cm, 0) node [midway, headingNode] {\headingSize Data summary};
+\draw[draw=black, line width=1pt, shorten > =3mm, shorten < =3mm] (b.south east) --++ (6cm, 0) node [midway, headingNode] {\headingSize Model vs. data};
+
+% Labels
+\node[label, yshift=1mm] at (a.north -| topleft) {\labelSize a};
+\node[label, yshift=-2mm] at (b.north west) {\labelSize b};
+\node[label, yshift=-2mm] at (c.north west) {\labelSize c};
+\node[label, yshift=12mm] at (d.north west) {\labelSize d};
+\node[label, yshift=12mm] at (e.north west) {\labelSize e};
+
+\end{tikzpicture}
+\end{document}

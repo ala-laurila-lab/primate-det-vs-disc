@@ -1,0 +1,98 @@
+\documentclass[tikz, 11pt]{standalone}
+
+\input{FigureSettings.tex}
+\input{FigureFontsAndColors}
+
+% Parameters
+\newcommand{\xs}{12mm}
+\newcommand{\rc}{42mm}
+\newcommand{\xw}{60mm}
+\newcommand{\xRange}{23}
+\newcommand{\yShift}{-9mm} 	% Arbitrarily set value to roughly shift the detection lines a suitable amount
+\newcommand{\ys}{6.4mm}		% Space between panel.north top and topAxes.north
+\newcommand{\yh}{7.8mm}		% Height of topAxes
+\newcommand{\dy}{2mm}			% Space between detection/discrimination lines
+\newcommand{\noise}{2}
+
+\begin{document}
+\begin{tikzpicture}[x=1mm, y=1mm]
+
+% Dim light detection models, panels a and b
+\draw[draw=black, line width=1pt, shorten > =3mm, shorten < =3mm] (0, 7mm) --++ (12cm, 0) node[midway, headingNode] {\headingSize Dim light detection models};
+\node[inner sep=1mm] at  (3cm, 3mm)  {\headingSize Classical model};
+\node[inner sep=1mm] at (9cm, 3mm) {\headingSize New model};
+
+\node[panel, anchor=north west] (a) at (0,0) {\includegraphics[]{"Retinal-Processing/ClassicModel"}};
+\node[panel, anchor=north west] (b) at (a.north east) {\includegraphics[]{"Retinal-Processing/NewModel"}};
+
+% Paradigm testing, panels c to h
+\coordinate[yshift=-5mm] (yTmp) at (a.south east);
+\draw[draw=black, line width=1pt, shorten > =3mm, shorten < =3mm] (a.west|-yTmp) --++ (12cm, 0) node[midway, headingNode] {\headingSize Test paradigm};
+\coordinate[yshift=-9mm] (yTmp) at (a.south);
+\node[inner sep=1mm] (lin) at  (yTmp)  {\headingSize Linear processing};
+\node[inner sep=1mm] (nonlin) at (b|-yTmp) {\headingSize Nonlinear processing};
+
+\node[panel, anchor=north, yshift=2mm] (c) at (lin.south) {\includegraphics[]{"../Figure Panels/Fig1_Distributions_th0"}};
+\node[panel, anchor=north, yshift=2mm] (d) at (lin.south-|b.south) {\includegraphics[]{"../Figure Panels/Fig1_Distributions_th1"}};
+% Detection lines
+\foreach \xShift in  {0cm, \xw}{
+	\foreach \mu/\i/\s in  {6/0/I, 10/1/II, 14/2/III}{
+		\pgfmathsetmacro{\start}{(\noise)/\xRange*\rc+\xs+\xShift}%
+		\pgfmathsetmacro{\stop}{(\mu-\noise)/\xRange*\rc}%
+		\node[inner sep=1mm, anchor=east, color=detColor] at ($(\start pt, \yShift + \i*\dy+0.5*\dy)+(c.north west)$) {\tinySize \textrm{\s}};
+		\ifdim \i pt > 1 pt
+	 		%\draw[lines, draw=detColor] ($(\start pt, \yShift + \i*\dy)+(c.north west)$) --++(0, 0.5*\dy) --++ (\stop pt, 0) node[textNode, midway, above, color=detColor]{\textSize Detection}  --++ (0, -0.5*\dy);
+			\draw[lines, draw=detColor] ($(\start pt, \yShift + \i*\dy)+(c.north west)$) --++(0, 0.5*\dy) --++ (\stop pt, 0)  --++ (0, -0.5*\dy) node[textNode, right, color=detColor]{\textSize Detection};
+		\else
+			\draw[lines, draw=detColor] ($(\start pt, \yShift + \i*\dy)+(c.north west)$) --++(0, 0.5*\dy) --++ (\stop pt, 0) --++ (0, -0.5*\dy);
+		\fi
+	}
+}
+
+% Discrimination lines
+\foreach \xShift in  {0cm, \xw}{
+	\foreach \mu/\i/\s in  {10/0/I, 14/1/II}{
+		\pgfmathsetmacro{\start}{(\noise+4)/\xRange*\rc+\xs+\xShift}%
+		\pgfmathsetmacro{\stop}{(\mu-\noise-4)/\xRange*\rc}%
+		\node[textNode, anchor=east, color=discColor] at ($(\start pt, - \ys - \yh - \i*\dy - 1*\dy)+(c.north west)$)  {\tinySize \textrm{\s}};
+		\ifdim \i pt > 0 pt
+			%\draw[lines, draw=discColor] ($(\start pt, -\ys-\yh + -\i*\dy)+(c.north west)$) --++(0, -0.5*\dy) --++ (\stop pt, 0) node[textNode, midway, below, color=discColor]{\textSize Discrimination}  --++ (0, 0.5*\dy);
+			\draw[lines, draw=discColor] ($(\start pt, - \ys - \yh -\i*\dy - 0.75*\dy)+(c.north west)$) --++(0, -0.5*\dy) --++ (\stop pt, 0)  --++ (0, 0.5*\dy) node[textNode, right, color=discColor]{\textSize Discrimination};
+		\else
+			\draw[lines, draw=discColor] ($(\start pt, - \ys - \yh - \i*\dy - 0.75*\dy)+(c.north west)$) --++(0, -0.5*\dy) --++ (\stop pt, 0) --++ (0, 0.5*\dy);
+		\fi
+	}
+}
+
+\newcommand{\dx}{3mm}
+% I_ref and Delta I
+\foreach \xShift in  {0cm, \xw}{
+	\pgfmathsetmacro{\start}{(\noise+4)/\xRange*\rc+\xs+\xShift}%
+	\pgfmathsetmacro{\stop}{(4)/\xRange*\rc}%
+	\coordinate(start) at ($(\start pt, -\ys-\yh+0.33*\yh)+(c.north west)$);
+	\draw[lines, dotted] ($(start)+(-\dx, 0)$) --++ (\stop pt + 2*\dx, 0);
+	\node[anchor=north, inner sep=0.5mm, xshift=-1.1*\dx] at (start) {\tinySize $\mathsf{I_{ref}}$};
+	\node[anchor=south, inner sep=0.5mm, xshift=1.1*\dx] at ($(start)+(\stop pt, 0)$) {\tinySize $\Delta$I};
+}
+
+% Discard and transmit
+\pgfmathsetmacro{\start}{7/\xRange*\rc+\xs}%
+\node[textNode, yshift=21mm, anchor=east] at ($(\start pt, 0)+(d.south west)$) {\tinySize Discard};
+\node[textNode, yshift=21mm, anchor=west] at ($(\start pt, 0)+(d.south west)$) {\tinySize Transmit};
+
+\node[panel, anchor=north west, yshift=3mm] (e) at (c.south west) {\includegraphics[]{"../Figure Panels/Fig1_2AFC_th0"}};
+\node[panel, anchor=north west] (f) at (e.north east) {\includegraphics[]{"../Figure Panels/Fig1_2AFC_th1"}};
+\node[panel, anchor=north west, yshift=3mm] (g) at (e.south west) {\includegraphics[]{"../Figure Panels/Fig1_Dippers_th0"}};
+\node[panel, anchor=north west] (h) at (g.north east) {\includegraphics[]{"../Figure Panels/Fig1_Dippers_th1"}};
+
+\node[label, yshift=5mm] at (a.north west) {\labelSize a};
+\node[label, yshift=5mm] at (b.north west) {\labelSize b};
+\node[label, yshift=3mm] at (c.north west) {\labelSize c};
+\node[label, yshift=3mm] at (d.north west) {\labelSize d};
+\node[label] at (e.north west) {\labelSize e};
+\node[label] at (f.north west) {\labelSize f};
+\node[label] at (g.north west) {\labelSize g};
+\node[label] at (h.north west) {\labelSize h};
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,109 @@
+\documentclass[tikz, 11pt]{standalone}
+
+\input{Rod-Bipolar-Settings}
+\renewcommand{\unit}{1mm}
+\renewcommand{\nRods}{7}
+\renewcommand{\textSize}{\scriptsize \baselineskip=6pt}
+
+% Re-define some styles
+\tikzstyle{textNode}=[line width=\lineWidth,  text width=5mm, align=center, inner sep=0.25*\unit]
+
+\begin{document}
+\begin{tikzpicture}[x=\unit, y=\unit]
+
+% --- Cones and rods ---
+\pic[local bounding box=c1] at (0, 0) {cone};
+\node[synapseWide, draw=conePathwayColor, fill=conePathwayColor, yshift=-1*\unit] (cs1) at (c1.south) {};
+\draw[coneEdge] (cs1.north) -- (c1.south);
+\foreach \x in {1,...,\nRods}{
+	\pic[local bounding box=r] at (\x*2+0.5, 0) {rod};
+	\node[synapseWide, draw=rodPathwayColor, fill=rodPathwayColor, yshift=-0.75*\unit] (rs\x) at (r.south) {};
+	\draw[rodEdge] (rs\x.north) -- (r.south);
+}
+\pic[local bounding box=c2] at ({(\nRods+1)*2+1}, 0) {cone};
+\node[synapseWide, draw=conePathwayColor, fill=conePathwayColor, yshift=-1*\unit] (cs2) at (c2.south) {};
+\draw[coneEdge] (cs2.north) -- (c2.south);
+
+% cone to rod gap junctions
+\draw[snakeEdge, draw=conePathwayColor] (cs1.east) -- (rs1.west);
+\draw[snakeEdge, draw=conePathwayColor] (rs\nRods.east) -- (cs2.west);
+
+% --- Cone bipolar cells ---
+\foreach \x in {1,2}{
+	\node[synapse, draw=conePathwayColor, fill=conePathwayColor, anchor=north, yshift=-\synDist] (cbTop\x) at (cs\x.south) {};
+	\node[bipolar, draw=conePathwayColor, fill=conePathwayColor, yshift=-\bpShift] (cb\x) at (cbTop\x.south) {};
+	\node[synapse, draw=rodPathwayColor, fill=rodPathwayColor, anchor=north, yshift=-\bpShift] (cbBottom\x) at (cb\x.center) {};
+	\draw[coneEdge] (cb\x.north) -- (cbTop\x.south);
+	\draw[coneEdge] (cb\x.south) -- (cbBottom\x.north);
+}
+\node[synapse, draw=conePathwayColor, fill=conePathwayColor, anchor=north, yshift=-\synDist] (cbTop1) at (rs1.south) {};
+\draw[coneEdge] (cb1.north) --++ (0, 0.5*\unit) -- (cbTop1.south);
+
+% --- Rod bipolar cell ---
+\node[bipolar, draw=rodPathwayColor, fill=rodPathwayColor, yshift=-\bpShift, xshift=(\nRods-1)*\unit] (rb) at (cbTop1.south) {};
+\node[synapse, draw=rodPathwayColor, fill=rodPathwayColor, anchor=north, yshift=-\bpShift] (rbBottom) at (rb.center) {};
+\draw[rodEdge] (rb.south) -- (rbBottom.north);
+\foreach \x in {2,...,\nRods}{
+	\node[synapse, draw=rodPathwayColor, fill=rodPathwayColor, anchor=north, yshift=-\synDist] (rbTop\x) at (rs\x.south) {};
+	\draw[rodEdge] (rb.north) --++ (0, 0.5*\unit) -- (rbTop\x.south);
+}
+
+% --- Amacrine cells ---
+% Left cell, OFF side
+\node[amacrine, draw=rodPathwayColor, fill=rodPathwayColor, yshift=-\amaShift, xshift=-(0.5*\nRods+0.75)*\unit] (a1) at (rb.south) {};
+\node[synapse, draw=rodPathwayColor, fill=rodPathwayColor, anchor=east, xshift=-\synDist] (aLeft1) at (rbBottom.west) {};
+\node[synapse, draw=rodPathwayColor, fill=rodPathwayColor, anchor=west, xshift=\synDist] (aTopLeft1) at (cb1|-a1) {};
+\node[synapse, draw=rodPathwayColor, fill=rodPathwayColor, anchor=west, xshift=\synDist, yshift=-\synDist] (aBottomLeft1) at (cbBottom1.south east) {};
+\draw[rodEdge] (a1.east) -- (aLeft1.west);
+\draw[rodEdge] (a1.west) -- (aTopLeft1.east);
+\draw[rodEdge] (a1.west) -- (aBottomLeft1.east);
+% Right cell, ON side
+\node[amacrine, draw=rodPathwayColor, fill=rodPathwayColor, yshift=-\amaShift, xshift=(0.5*\nRods+0.75)*\unit] (a2) at (rb.south) {};
+\node[synapse, draw=rodPathwayColor, fill=rodPathwayColor, anchor=west, xshift=\synDist] (aRight2) at (rbBottom.east) {};
+\draw[rodEdge] (a2.west) -- (aRight2.east);
+\draw[snakeEdge, draw=rodPathwayColor] (a2.east) -- (a2-|cb2);
+\draw[rodEdge] (cbBottom2.north) -- (a2.west-|cb2);
+
+% --- RGCs ---
+% OFF
+\node[synapse, draw=offColor, fill=offColor, anchor=north, yshift=-\synDist] (offTop) at (cbBottom1.south) {};
+\coordinate[yshift=-\rgcShift] (offRgc) at (offTop.south);
+\coordinate[] (pHorOff) at ($(cb1.center) + (-2.5*\unit, 0)$);
+
+% Pipett
+\node[pipettEdge, ellipse, minimum width=1.5*\unit, minimum height=0.75*\unit, inner sep=0, rotate=45] (pipett) at (pHorOff|-cb1.south) {};
+\draw[pipettEdge] (pipett.center) --++ (-1.5*\unit, 0) --++ (0, 1*\unit) --++ (-1.5*\unit, -1*\unit) --++ 
+	(-0.5*\unit, 0) --++ (0.5*\unit, 0) --++ (1.5*\unit, -1*\unit) --++ (0, 1*\unit);
+\draw[pipettEdge] (pipett.center) -- ($(pipett.center)!0.5!(offRgc.center)$);
+\draw[pipettEdge] (pipett.west) -- (offRgc.center);
+\draw[pipettEdge] (pipett.east) -- (offRgc.center);
+
+% Soma
+\node[rgc, draw=none, fill=white] at (offRgc) {};
+\node[rgc, draw=offColor, fill=offColor, fill opacity=0.5] (offSoma) at (offRgc) {};
+\draw[edge, draw=offColor] (offTop.south) -- (offSoma.north);
+\node[textNode, anchor=west, color=offColor] at (offSoma.east) {\textSize \scshape Off rgc \par};
+
+
+% ON
+\node[synapse, draw=onColor, fill=onColor, anchor=north, yshift=-\synDist] (onTop) at (cbBottom2.south) {};
+\coordinate[yshift=-\rgcShift] (onRgc) at (onTop.south);
+\coordinate[] (pHorOn) at ($(cb2.center) + (2.5*\unit, 0)$);
+
+% Pipett
+\node[pipettEdge, ellipse, minimum width=1.5*\unit, minimum height=0.75*\unit, inner sep=0, rotate=-45] (pipett) at (pHorOn|-cb1.south) {};
+\draw[pipettEdge] (pipett.center) --++ (1.5*\unit, 0) --++ (0, 1*\unit) --++ (1.5*\unit, -1*\unit) --++ 
+	(0.5*\unit, 0) --++ (-0.5*\unit, 0) --++ (-1.5*\unit, -1*\unit) --++ (0, 1*\unit);
+\draw[pipettEdge] (pipett.center) -- ($(pipett.center)!0.5!(onRgc.center)$);
+\draw[pipettEdge] (pipett.west) -- (onRgc.center);
+\draw[pipettEdge] (pipett.east) -- (onRgc.center);
+
+% Soma
+\node[rgc, draw=none, fill=white] at (onRgc) {};
+\node[rgc, draw=onColor, fill=onColor, fill opacity=0.5] (on) at (onRgc) {};
+\draw[edge, draw=onColor] (onTop.south) -- (on.north);
+\node[textNode, anchor=east, color=onColor] at (on.west) {\textSize \scshape On rgc \par};
+
+
+\end{tikzpicture}
+\end{document}

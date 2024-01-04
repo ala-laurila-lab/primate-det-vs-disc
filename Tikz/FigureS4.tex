@@ -1,0 +1,96 @@
+\documentclass[tikz, 11pt]{standalone}
+
+% Parameters and settings
+\input{FigureSettings.tex}
+\input{FigureFontsAndColors}
+\renewcommand{\textSize}{\scriptsize \baselineskip=8pt}
+
+% Model parameters and settings
+\input{Retinal-Processing/ModelSettings}
+\input{Models/ModelSettings}
+
+\newcommand{\xModelShift}{-15.5}
+\newcommand{\yModelShift}{4.5}
+
+\begin{document}
+\begin{tikzpicture}[x=\unit, y=\unit]
+
+% Panel a
+\node[panel, anchor=north west] (a) at (0cm, 0cm) {\includegraphics[]{"../Supplement figures/SupplementModelRobustness_addNoiseVal"}};
+\begin{scope}[shift={($(a)+(\xModelShift, \yModelShift)$)}]
+	\input{Models/ModelFrame}
+	\node[box, fill=none, minimum width=\objSize*\unit+2*\pad*\unit, minimum height=\height*\unit, anchor=west, xshift=2*\xSep*\unit - 1*\pad*\unit] (brainBox) at (largeSum.east) {};
+	\node[funObj, fill=modelFillColor] (nonLinB) at (brainBox) {};
+	\pic[] at (nonLinB) {nonLinFun};
+	\draw[edgeShort] (largeSum.east) -- (nonLinB.west);
+	\draw[edgeShort] (nonLinB.east) --++ (\xSep, 0);
+	% Highlight
+	\node[textNodeThight, fill=white] at (noiseAdd1) {\tinySize \color{discColor} N};
+	\node[textNodeThight, fill=white] at (noiseAdd3) {\tinySize \color{discColor} N};
+	\node[symObj, fill=none, draw=discColor, line width = 2*\lineWidth] at (noise1) {};
+	\node[symObj, fill=none, draw=discColor, line width = 2*\lineWidth] at (noise3) {};
+\end{scope}
+
+% Panel b
+\node[panel, anchor=north west] (b) at (a.north east) {\includegraphics{"../Supplement figures/SupplementModelRobustness_mulNoiseVal"}};
+\begin{scope}[shift={($(b)+(\xModelShift, \yModelShift)$)}]
+	\input{Models/ModelFrame}
+	\node[box, fill=none, minimum width=\objSize*\unit+2*\pad*\unit, minimum height=\height*\unit, anchor=west, xshift=2*\xSep*\unit - 1*\pad*\unit] (brainBox) at (largeSum.east) {};
+	\node[funObj, fill=modelFillColor] (nonLinB) at (brainBox) {};
+	\pic[] at (nonLinB) {nonLinFun};
+	\draw[edgeShort] (largeSum.east) -- (nonLinB.west);
+	\draw[edgeShort] (nonLinB.east) --++ (\xSep, 0);
+	% Highlight
+	\node[textNodeThight, fill=white] at (noiseMul1) {\tinySize \color{discColor} N};
+	\node[symObj, fill=none, draw=discColor, line width = 2*\lineWidth] at (noiseMul) {};
+\end{scope}
+
+% Panel c
+\node[panel, anchor=north west] (c) at (a.south west) {\includegraphics{"../Supplement figures/SupplementModelRobustness_firstTh"}};
+\begin{scope}[shift={($(c)+(\xModelShift, \yModelShift)$)}]
+	\input{Models/ModelFrame}
+	\node[box, fill=none, minimum width=\objSize*\unit+2*\pad*\unit, minimum height=\height*\unit, anchor=west, xshift=2*\xSep*\unit - 1*\pad*\unit] (brainBox) at (largeSum.east) {};
+	\node[funObj, fill=modelFillColor] (nonLinB) at (brainBox) {};
+	\pic[] at (nonLinB) {nonLinFun};
+	\draw[edgeShort] (largeSum.east) -- (nonLinB.west);
+	\draw[edgeShort] (nonLinB.east) --++ (\xSep, 0);
+	% Highlight
+	\node[obj, draw=discColor, line width=2*\lineWidth] at (nonLin1) {};
+	\node[obj, draw=discColor, line width=2*\lineWidth] at (nonLin3) {};
+\end{scope}
+
+% Panel d
+\node[panel, anchor=north west] (d) at (c.north east) {\includegraphics{"../Supplement figures/SupplementModelRobustness_secondTh"}};
+\begin{scope}[shift={($(d)+(\xModelShift, \yModelShift)$)}]
+	\input{Models/ModelFrame}
+	\node[box, fill=none, minimum width=\objSize*\unit+2*\pad*\unit, minimum height=\height*\unit, anchor=west, xshift=2*\xSep*\unit - 1*\pad*\unit] (brainBox) at (largeSum.east) {};
+	\node[funObj, fill=modelFillColor] (nonLinB) at (brainBox) {};
+	\pic[] at (nonLinB) {nonLinFun};
+	\draw[edgeShort] (largeSum.east) -- (nonLinB.west);
+	\draw[edgeShort] (nonLinB.east) --++ (\xSep, 0);
+	% Highlight
+	\node[obj, draw=discColor, line width=2*\lineWidth] at (nonLinB) {};
+\end{scope}
+
+% Panel e
+\node[panel, anchor=north west] (e) at (c.south west) {\includegraphics{"../Supplement figures/SupplementModelRobustness_nSubUnit"}};
+\begin{scope}[shift={($(e)+(\xModelShift, \yModelShift)$)}]
+	\input{Models/ModelFrame}
+	\node[box, fill=none, minimum width=\objSize*\unit+2*\pad*\unit, minimum height=\height*\unit, anchor=west, xshift=2*\xSep*\unit - 1*\pad*\unit] (brainBox) at (largeSum.east) {};
+	\node[funObj, fill=modelFillColor] (nonLinB) at (brainBox) {};
+	\pic[] at (nonLinB) {nonLinFun};
+	\draw[edgeShort] (largeSum.east) -- (nonLinB.west);
+	\draw[edgeShort] (nonLinB.east) --++ (\xSep, 0);
+	% Highlight
+	\node[anchor=east, inner sep=0.*\unit, fill=white] (nsub) at (subunitCount.east) {\color{discColor} \tinySize n};
+\end{scope}
+
+% Labels
+\node[label, yshift=1mm] at (a.north west) {\labelSize a};
+\node[label, yshift=1mm] at (b.north west) {\labelSize b};
+\node[label, yshift=1mm] at (c.north west) {\labelSize c};
+\node[label, yshift=1mm] at (d.north west) {\labelSize d};
+\node[label, yshift=1mm] at (e.north west) {\labelSize e};
+
+\end{tikzpicture}
+\end{document}

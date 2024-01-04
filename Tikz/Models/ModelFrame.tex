@@ -1,0 +1,60 @@
+
+\coordinate(lc) at (0, 0);
+\node[box, fill=none, minimum width=\retinaWidth*\unit+2*\pad*\unit, minimum height=\height*\unit, anchor=west, xshift=-1*\pad*\unit] (retinaBox) at (lc) {};
+
+\foreach \i in {1, 2, 3}{
+	\pgfmathsetmacro{\yTmpSub}{ (\i-2)*(\objSize+\ySep) }
+	% Rods
+  	\foreach \j in {1,..., 3}{
+  		\pgfmathsetmacro{\yTmpRod}{ 0.3*(\j-2)*(\objSize) }%
+		\node[obj, outer sep=0, anchor=center, xshift=0.5*\objSize*\unit] (r\i\j) at ($(lc)+(0, \yTmpRod + \yTmpSub )$) {};
+		\ifdim \i pt = 2pt
+			\node[circle, fill=black, minimum width=1*\lineWidth, inner sep=0] at (r\i\j) {};
+		\else
+  			\pic[local bounding box=bbTmp] at (r\i\j) {rod};
+		\fi
+  	}
+	% Subunits
+	\ifdim \i pt = 2pt
+		\node[anchor=center, inner sep=0.*\unit] (subunitCount) at (lc -| r\i1.west) {\tinySize n};
+	\else
+		\node[sumObj, xshift=\xSep*\unit + 1.25*\objSize*\unit] (subUnit\i) at (lc |- r\i2) {};
+		\draw[edge, fill=modelFillColor] (subUnit\i.north west) -- (subUnit\i.east) -- (subUnit\i.south west) -- cycle;
+		\node[funObj, fill=modelFillColor, xshift=2*\xSep*\unit + 2*\objSize*\unit] (nonLin\i) at (lc |- r\i2) {};
+		\pic[] at (nonLin\i) {nonLinFun};
+		% Noise
+		\coordinate[xshift=\lineWidth] (tmp1) at (subUnit\i.east);
+		\coordinate[yshift=-\objSize*\unit] (noise\i) at (tmp1);
+		\pic[local bounding box=bbTmp] at (noise\i) {noiseAdd};
+		\node[textNodeThight, anchor=east] (noiseAdd\i) at (bbTmp.west) {\tinySize N};
+		\draw[edgeShort] (bbTmp.north) -- (tmp1);
+	\fi
+}
+
+% Large sum
+\node[obj, minimum height=\sumHeight*\unit, xshift=3*\xSep*\unit + 3*\objSize*\unit] (largeSum) at (lc) {}; 
+\draw[edge, fill=modelFillColor] (largeSum.south west) -- (largeSum.north west) -- (largeSum.east) -- cycle;
+\node[xshift=-0.2*\unit] at (largeSum) {\tinySize $\sum$};
+\coordinate[xshift=\lineWidth] (tmp1) at (largeSum.east);
+\coordinate[] (noiseMul) at (tmp1 |- noiseAdd1);
+\pic[local bounding box=bbTmp] at (tmp1 |- noiseAdd1) {noiseMul};
+\node[textNodeThight, anchor=east] (noiseMul1) at (bbTmp.west) {\tinySize N};
+\draw[edgeShort] (bbTmp.north) -- (tmp1);
+
+% Edges
+\foreach \i in {1,3}{
+	\foreach \j in {1,..., 3}{
+		\draw[edgeShort] (r\i\j) -- (r\i\j -| subUnit\i.west);
+	}
+	\draw[edgeShort] (subUnit\i.east) -- (nonLin\i.west);
+	\draw[edgeShort] (nonLin\i.east) -- (nonLin\i.east -| largeSum.west);
+}
+
+
+%\node[symObj] (noiseAddSym1) at (noiseAdd1.east -| subUnit1.east) {};
+%\draw[edge, shorten > =0.25*\unit, shorten < =0.25*\unit] (noiseAddSym1.north) -- (noiseAddSym1.south); 
+%\draw[edge, shorten > =0.25*\unit, shorten < =0.25*\unit] (noiseAddSym1.west) -- (noiseAddSym1.east); 
+%\draw[edgeShort] (noiseAdd.north) -- (subUnit3.east);
+%\node[symObj] (noiseAddSym3) at ($(noiseAdd.north)!0.5!(subUnit3.east)$) {};
+%\draw[edge, shorten > =0.25*\unit, shorten < =0.25*\unit] (noiseAddSym3.north) -- (noiseAddSym3.south); 
+%\draw[edge, shorten > =0.25*\unit, shorten < =0.25*\unit] (noiseAddSym3.west) -- (noiseAddSym3.east); 

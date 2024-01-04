@@ -1,0 +1,28 @@
+
+\renewcommand{\unit}{1mm}
+\renewcommand{\ySep}{0.5}
+\newcommand{\xSep}{1.5}
+\newcommand{\height}{11}
+\pgfmathsetmacro{\sumHeight}{3*\objSize+3*\ySep}
+\pgfmathsetmacro{\retinaWidth}{3.5*\objSize+3*\xSep}
+
+%\colorlet{modelFillColor}{onColor!\fillSat!white}
+%\colorlet{modelFillColor}{gray!\fillSat!white}
+\colorlet{modelFillColor}{boxColor}
+%\colorlet{modelFillColor}{modelColor!\fillSat!white}
+
+\tikzstyle{symObj}=[inner sep=0, outer sep=0, minimum width=0.65*\objSize*\unit, circle, fill=modelFillColor, draw=black, line width=\lineWidth]
+
+% Noise symbols
+\tikzset{
+	noiseAdd/.pic = {
+		\node[symObj] (tmp) at (0, 0) {};
+		\draw[edge, shorten > =0.35*\unit, shorten < =0.35*\unit] (tmp.north) -- (tmp.south); 
+		\draw[edge, shorten > =0.35*\unit, shorten < =0.35*\unit] (tmp.west) -- (tmp.east); }
+}
+\tikzset{
+	noiseMul/.pic = {
+		\node[symObj] (tmp) at (0, 0) {};
+		\draw[edge, shorten > =0.35*\unit, shorten < =0.35*\unit] (tmp.north west) -- (tmp.south east); 
+		\draw[edge, shorten > =0.35*\unit, shorten < =0.35*\unit] (tmp.south west) -- (tmp.north east); }
+}

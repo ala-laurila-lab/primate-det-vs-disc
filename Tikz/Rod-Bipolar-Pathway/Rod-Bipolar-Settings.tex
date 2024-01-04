@@ -1,0 +1,52 @@
+\usetikzlibrary{shapes.geometric, snakes, calc}
+
+\input{"../FigureFontsAndColors"}
+
+% Parameters
+\newcommand{\unit}{0.6mm}
+\newcommand{\nRods}{3}
+\newcommand{\lineWidth}{0.5pt}
+\newcommand{\synDist}{0.0*\unit}
+\newcommand{\bpShift}{3*\unit}
+\newcommand{\amaShift}{0.75*\unit}
+\newcommand{\rgcShift}{3*\unit}
+
+% Colors
+\definecolor{rodPathwayColor}{rgb}{0.,0.,0.}
+\definecolor{conePathwayColor}{rgb}{0.5,0.5,0.5}
+
+% Generic Styles
+\tikzstyle{edge}=[line width=\lineWidth, line cap=round, rounded corners=0.1*\unit]
+\tikzstyle{conePathway}=[draw=conePathwayColor, fill=conePathwayColor, rounded corners=0.1*\unit]
+\tikzstyle{coneEdge}=[edge, draw=conePathwayColor]
+\tikzstyle{rodPathway}=[draw=rodPathwayColor, fill=rodPathwayColor, rounded corners=0.1*\unit]
+\tikzstyle{rodEdge}=[edge, draw=rodPathwayColor]
+\tikzstyle{synapse}=[circle, minimum height=0.5*\unit, inner sep=0]
+\tikzstyle{synapseWide}=[ellipse, minimum height=0.5*\unit, minimum width=1*\unit, inner sep=0]
+\tikzstyle{bipolar}=[ellipse, minimum height=3*\unit, minimum width=1.5*\unit, inner sep=0]
+
+% Specific styles
+\tikzstyle{rodPathwaySynapse}=[rodPathway, synapse]
+\tikzstyle{rodPathwaySynapseWide}=[rodPathway, synapseWide]
+\tikzstyle{rodPathwayBipolar}=[rodPathway, bipolar]
+\tikzstyle{conePathwaySynapse}=[conePathway, synapse]
+\tikzstyle{conePathwaySynapseWide}=[conePathway, synapseWide]
+\tikzstyle{conePathwayBipolar}=[conePathway, bipolar]
+
+\tikzstyle{amacrine}=[draw=rodPathwayColor, fill=rodPathwayColor, ellipse, minimum height=1.5*\unit, minimum width=3.5*\unit, inner sep=0]
+\tikzstyle{rgc}=[circle, minimum width=3*\unit, inner sep=0, line width=\lineWidth]
+\tikzstyle{snakeEdge}=[line width=\lineWidth, snake=zigzag, segment length=0.6*\unit, segment amplitude=0.3*\unit]
+\tikzstyle{textNode}=[line width=\lineWidth, align=center, inner sep=0.5mm, text height=7pt, text depth=1pt]
+\tikzstyle{pipettEdge}=[edge, draw=black]
+
+% Generic rod and cone
+\tikzset{
+	cone/.pic = {
+		\draw[conePathway]  (0, 0) ellipse (0.75 and 2);
+		\draw[conePathway] (-0.5, 1.5) -- (-0.2, 5) -- (0.2, 5) -- (0.5, 1.5) -- cycle;}
+}
+\tikzset{
+	rod/.pic = {
+		\draw[rodPathway]  (0, -0.75) ellipse (0.75 and 1.5);
+		\draw[rodPathway] (-0.4, 0.7) -- (-0.4, 6) -- (0.4, 6) -- (0.4, 0.7) -- cycle;}
+}

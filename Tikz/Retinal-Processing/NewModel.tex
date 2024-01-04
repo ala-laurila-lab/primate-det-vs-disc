@@ -1,0 +1,114 @@
+\documentclass[tikz, 11pt]{standalone}
+
+\input{"../FigureFontsAndColors"}
+\input{ModelSettings}
+
+\begin{document}
+\begin{tikzpicture}[x=\unit, y=\unit]
+
+\input{ModelFrame}
+
+% ------ Retina content -------
+
+% Pathways
+\node[box, anchor=south, fill=boxColor, minimum width=\retinaWidth*\unit+2*\pad*\unit, minimum height=\pathwayHeight*\unit, yshift=\yShiftPathway*\unit] (offPathway) at (retina) {};
+\node[box, anchor=north, fill=boxColor, minimum width=\retinaWidth*\unit+2*\pad*\unit, minimum height=\pathwayHeight*\unit, yshift=-\yShiftPathway*\unit] (onPathway) at (retina) {};
+\node[textNodeLabel, anchor=south west, minimum width=\retinaWidth*\unit+2*\pad*\unit, fill=offColor!\fillSat!white, inner sep=0.5*\unit] (linearLabel) at (offPathway.north west) {\tinySize Linear processing};
+\node[textNodeLabel, anchor=north west, minimum width=\retinaWidth*\unit+2*\pad*\unit, fill=onColor!\fillSat!white, inner sep=0.5*\unit] (nonlinearLabel) at (onPathway.south west) {\tinySize Nonlinear processing};
+\draw[edge, offColor] (linearLabel.north west) -- (linearLabel.north east) -- (linearLabel.south east) -- (offPathway.north east) -- (offPathway.south east) -- (offPathway.south west) -- cycle;
+\draw[edge, onColor] (nonlinearLabel.south west) -- (onPathway.north west) -- (onPathway.north east) -- (onPathway.south east) -- (nonlinearLabel.north east) -- (nonlinearLabel.south east) -- cycle;
+
+% Rods
+\foreach \dy\s in {1/Off, -1/On}{
+	\pgfmathsetmacro{\yTmpPath}{ \dy*(0.5*\pathwayHeight + \yShiftPathway)}
+	\foreach \i in {1, 2}{
+		\pgfmathsetmacro{\yTmpSub}{ (\i-1.5)*(\objSize+\ySep) }
+		\ifdim \i pt > 1.5pt
+			\draw[photon] ($(retina.west)+(-4.5, \yTmpSub+\yTmpPath)$) --++ (3.5, 0);
+		\fi
+		\foreach \j in {1,..., 3}{
+			\pgfmathsetmacro{\yTmpRod}{ 0.3*(\j-2)*(\objSize) }%
+			\node[obj, outer sep=0, anchor=center, xshift=0.5*\objSize*\unit] (r\s\i\j) at ($(retina.west)+(0, \yTmpRod + \yTmpSub +\yTmpPath )$) {};
+			\pic[local bounding box=bbTmp] at (r\s\i\j) {rod};
+		}
+	}
+}
+
+% OFF pathway
+\node[obj, minimum height=\sumHeight*\unit, xshift=3*\xSepOn*\unit + 3*\objSize*\unit, yshift=\yShiftPathway*\unit +0.5*\pathwayHeight*\unit] (largeSumOff) at (retina.west) {}; 
+\draw[edge, fill=offColor!\fillSat!white] (largeSumOff.south west) -- (largeSumOff.north west) -- (largeSumOff.east) -- cycle;
+\node[xshift=-0.2*\unit] at (largeSumOff) {\tinySize $\sum$};
+\node[obj, draw=black, fill=offColor!\fillSat!white, circle, minimum width=2.0*\objSize*\unit, anchor=center, xshift=4*\xSepOn*\unit + 4.5*\objSize*\unit] (rgcOff) at (retina.west |- largeSumOff) {\tinySize OFF};
+\coordinate (tmp) at ($(largeSumOff.east)!0.5!(rgcOff.west)$);
+\node[anchor=south, inner sep=0] (noise) at (tmp |- largeSumOff.south) {\tinySize N};
+\draw[edgeShort] (tmp) -- (noise.north);
+\foreach \i in {1, 2}{
+	\foreach \j in {1,..., 3}{
+		\draw[edgeShort] (rOff\i\j) -- (rOff\i\j -| largeSumOff.west);
+	}
+}
+\draw[edgeShort] ($(largeSumOff.east) + (0.5*\lineWidth, 0)$) -- (rgcOff.west);
+	
+% Spikes
+\node[obj, minimum width=1*\objSize*\unit, anchor=west, xshift=1*\xSepOn*\unit + 0.5*\lineWidth] (spikeLineOff) at (offPathway.east) {};
+%\draw[edge] (spikeLineOff.west) -- (spikeLineOff.east);
+\foreach \i in {2, 4, 5, 8, 9}{
+	\pgfmathsetmacro{\tmp}{\i/10}
+	\draw[edge] ($(spikeLineOff.west)!\tmp!(spikeLineOff.east) + (0, -1*\unit)$) --++ (0, 2*\unit);
+}
+\draw[edgeShort] (spikeLineOff.west) --++ (-\xSepOn mm, 0);
+
+% ON pathway
+\node[sumObj, xshift=1*\xSepOn*\unit + 1.25*\objSize*\unit] (subUnit1) at (retina.west |- rOn12) {};
+\draw[edge, fill=onColor!\fillSat!white] (subUnit1.north west) -- (subUnit1.east) -- (subUnit1.south west) -- cycle;
+\node[sumObj, xshift=1*\xSepOn*\unit + 1.25*\objSize*\unit] (subUnit2) at (retina.west |- rOn22) {};
+\draw[edge, fill=onColor!\fillSat!white] (subUnit2.north west) -- (subUnit2.east) -- (subUnit2.south west) -- cycle;
+\node[funObj, fill=onColor!\fillSat!white, anchor=center, xshift=2*\xSepOn*\unit + 2.*\objSize*\unit] (nonLin1) at (retina.west |- rOn12) {};
+\node[funObj, fill=onColor!\fillSat!white, anchor=center, xshift=2*\xSepOn*\unit + 2.*\objSize*\unit] (nonLin2) at (retina.west |- rOn22) {};
+\pic[] at (nonLin1) {nonLinFun};
+\pic[] at (nonLin2) {nonLinFun};
+\node[obj, minimum height=\sumHeight*\unit, xshift=3*\xSepOn*\unit + 3.*\objSize*\unit, yshift=-\yShiftPathway*\unit - 0.5*\pathwayHeight*\unit] (largeSumOn) at (retina.west) {}; 
+\draw[edge, fill=onColor!\fillSat!white] (largeSumOn.south west) -- (largeSumOn.north west) -- (largeSumOn.east) -- cycle;
+\node[xshift=-0.2*\unit] at (largeSumOn) {\tinySize $\sum$};
+\node[obj, draw=black, fill=onColor!\fillSat!white , circle, minimum width=2.0*\objSize*\unit, anchor=center, xshift=4*\xSepOn*\unit + 4.5*\objSize*\unit] (rgcOn) at (retina.west |- largeSumOn) {\tinySize ON};
+\coordinate (tmp) at ($(largeSumOn.east)!0.5!(rgcOn.west)$);
+\node[anchor=north, inner sep=0] (noise) at (tmp |- largeSumOn.north) {\tinySize N};
+\draw[edgeShort] (tmp) -- (noise.south);
+\foreach \i in {1, 2}{
+	\foreach \j in {1,..., 3}{
+		\draw[edgeShort] (rOn\i\j) -- (rOn\i\j -| subUnit\i.west);
+	}
+	\coordinate (tmp) at (subUnit\i.east -| largeSumOn.west);
+	\draw[edgeShort] (subUnit\i.east) -- (nonLin\i.west);
+	\draw[edgeShort] (nonLin\i.east) -- ($(tmp) - (0.5*\lineWidth, 0)$);
+}
+\draw[edgeShort] ($(largeSumOn.east) + (0.5*\lineWidth, 0)$) -- (rgcOn.west);
+	
+% Spikes
+\node[obj, minimum width=1*\objSize*\unit, anchor=west, xshift=1*\xSepOn*\unit + 0.5*\lineWidth] (spikeLineOn) at (onPathway.east) {};
+%\draw[edge] (spikeLineOn.west) -- (spikeLineOn.east);
+\foreach \i in {1, 3, 6, 7, 10}{
+	\pgfmathsetmacro{\tmp}{\i/11}
+	\draw[edge] ($(spikeLineOn.west)!\tmp!(spikeLineOn.east) + (0, -1*\unit)$) --++ (0, 2*\unit);
+}
+\draw[edgeShort] (spikeLineOn.west) --++ (-\xSepOn mm, 0);
+
+% Edges and labels V1, horizontal lines
+%\draw[edgeShort, -\arrow] (spikeLineOn.east) --++ (1.5*\objSize mm + \xSepOn mm - 0.5*\lineWidth, 0);
+%\node[textNodeThight, inner sep=0, xshift=0.5*\objSize*\unit+0.5*\xSepOn*\unit] (offQ) at (spikeLineOff.east) {\textSize ?};
+%\draw[edgeShort]  (spikeLineOff.east) -- (offQ.west);
+%\draw[edgeShort, -\arrow]  (offQ.east) -- (offQ -| brain.west);
+
+% Edges and labels V2, converging lines
+\draw[edgeShort, -\arrow] (spikeLineOn.east) --++ (0.75*\xSepOn, 0) -- ($(brain.west)+(-1.25*\xSepOn, -0)$) -- ($(brain.west)+(0, -0)$);
+\draw[edgeShort, -\arrow] (spikeLineOff.east) --++ (0.75*\xSepOn, 0) -- ($(brain.west)+(-1.25*\xSepOn, 0)$) node[midway, inner sep=0.5*\unit, fill=white] {\textSize ?} -- ($(brain.west)+(0, 0)$);
+
+% Photons, spikes and behavior
+\coordinate (tmp) at (2, 0);
+\node[textNodeThight, rotate=90, anchor=west, xshift=-5*\unit] (photons) at (tmp |- onPathway.south) {\tinySize \color{black} \textbf{Photons}};
+\node[textNodeThight, rotate=90, anchor=west, xshift=-5*\unit] (spikes) at (spikeLineOn |- onPathway.south) {\tinySize \color{black} \textbf{Spikes}};
+\coordinate (tmp) at ($(spikes |- retina.south) + (0, -2.5)$);
+% \draw[edgeShort, -\arrow, line width=2*\lineWidth] (spikes.west) -- (tmp -| spikes) -- (tmp -| behavior) -- (behavior.west);
+
+\end{tikzpicture}
+\end{document}
