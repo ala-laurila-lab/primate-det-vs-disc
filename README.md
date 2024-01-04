@@ -51,7 +51,7 @@ This repository includes the analysis code for: Human retina trades single-photo
 ## Structure
 __Figure panels:__ Functions for plotting figure panels in the manuscript.   
 __Helper functions:__ General plotting and analysis functions.  
-__Psychophysics analysis:__ Functions for analyzing psychophysics data.
+__Psychophysics analysis:__ Functions for analyzing psychophysics data.  
 __RGC analyses:__ Functions for analyzing RGC data.   
 __Supplement figures:__ Functions for supplementary figures and and panels.   
 __Theoretical model:__ Scripts and functions for fitting the pooling model to data and for understanding dips in general.  
