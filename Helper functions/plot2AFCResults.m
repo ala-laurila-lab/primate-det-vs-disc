@@ -23,7 +23,7 @@ function plot2AFCResults(out, saveDir)
     % Detection
     plot(out.twoAFC.detection.intensities, out.twoAFC.detection.fractionCorrect, 'ko', 'MarkerFaceColor', 'k')
     ph1 = plot(out.twoAFC.detection.fit.x, out.twoAFC.detection.fit.y, 'k-', 'Display', 'Detection');
-    plot(out.twoAFC.detection.th75, 0.75, 'kx')
+    plot(out.twoAFC.detection.th75Fit, 0.75, 'kx')
 
     % Discrimination
     plot(out.twoAFC.discrimination.intensityDifference{i}, out.twoAFC.discrimination.fractionCorrect{i}, 'ro', 'MarkerFaceColor', 'r')
@@ -31,7 +31,7 @@ function plot2AFCResults(out, saveDir)
       plot(out.twoAFC.discrimination.intensityDifferenceInterp{i}, out.twoAFC.discrimination.fractionCorrectInterp{i}, 'ro')
     end
     ph2 = plot(out.twoAFC.discrimination.fit.x, out.twoAFC.discrimination.fit.y{i}, 'r-', 'Display', 'Discrimination');
-    plot(out.twoAFC.discrimination.th75(i), 0.75, 'rx')
+    plot(out.twoAFC.discrimination.th75Fit(i), 0.75, 'rx')
 
     hold off
 

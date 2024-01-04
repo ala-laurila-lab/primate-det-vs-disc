@@ -7,6 +7,7 @@ function plotFig1Panels(visible)
   fprintf('Plotting Fig 1 panels...\n')
 
   config = getConfiguration();
+  cd(config.rootPath)
 
   % Parameters
   global width height x0 y0 xw yh dx dy

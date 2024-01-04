@@ -5,10 +5,8 @@ function plotModelRobustness(visible)
   end
   fprintf('Plotting model robustness... ')
 
-% clear; close all; clc;
-% visible = true;
-
   config = getConfiguration();
+  cd(config.rootPath)
   psychoResultsDir = config.PsychophysicsResultsPath;
 
   % Parameters

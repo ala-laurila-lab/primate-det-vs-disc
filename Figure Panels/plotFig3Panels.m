@@ -6,6 +6,7 @@ function plotFig3Panels(visible)
   fprintf('Plotting Fig 3 panels...\n')
 
   config = getConfiguration();
+  cd(config.rootPath)
   psychoResultsDir = config.PsychophysicsResultsPath;
 
   % Parameters

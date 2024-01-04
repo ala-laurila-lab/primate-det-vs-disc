@@ -6,6 +6,7 @@ function plotFig2Panels(visible)
   fprintf('Plotting Fig 2 panels...\n')
 
   config = getConfiguration();
+  cd(config.rootPath)
   rgcResultsDir = config.RGCResultsPath;
 
   % Parameters

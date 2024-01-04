@@ -7,6 +7,7 @@ function plotRodConvergenceFigure(visible)
   fprintf('Plotting rod convergence...\n')
   
   config = getConfiguration();           % Set default plot settings
+  cd(config.rootPath)
 
   % Parameters
   exampleCellIdx = 3;   % This is the cell whos image is shown in b

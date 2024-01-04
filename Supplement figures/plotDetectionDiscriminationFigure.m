@@ -6,6 +6,7 @@ function plotDetectionDiscriminationFigure(visible)
   fprintf('Plotting detection discrimination... ')
   
   config = getConfiguration();           % Set default plot settings
+  cd(config.rootPath)
 
   %%
   % onExample = '20190502c8.mat';

@@ -6,6 +6,8 @@ function plotModelParameters(visible)
   fprintf('Plotting model parameters... ')
 
   config = getConfiguration();
+  cd(config.rootPath)
+  
   % Parameters
   global width height x0 y0 xw yh dx
   width = 6;      % panel width, cm
