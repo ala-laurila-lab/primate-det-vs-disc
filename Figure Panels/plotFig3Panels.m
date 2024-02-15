@@ -134,7 +134,8 @@ function plotFig3Panels(visible)
 
   set(fh, 'CurrentAxes', ahLeft)
   plot(0, psychoSummary.detection.mean, '.', 'Color', config.Color.Det);
-  ylabel('\DeltaI (R*)')
+  ylh = ylabel('\DeltaI_{JND} (R*)');
+  ylh.Position(1) = ylh.Position(1) + abs(ylh.Position(1) * 0.1);
   set(gca, 'Color', 'none')
   set(fh, 'CurrentAxes', ahRight)
   plot(psychoSummary.discrimination.pedestalsInterp, psychoSummary.discrimination.mean, '-', 'Color', config.Color.Disc);
